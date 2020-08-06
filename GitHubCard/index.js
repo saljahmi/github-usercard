@@ -62,6 +62,43 @@ const followersArray = [];
     </div>
 */
 
+function cardMaker(cardObj){
+  const card = document.createElement('div')
+  const cardImg = document.createElement('img')
+  const cardInfo = document.createElement('div')
+  const cardName = document.createElement('h3')
+  const cardUser = document.createElement('p')
+  const cardLoc = document.createElement('p')
+  const cardProf = document.createElement('p')
+  const cardAdr = document.createElement('a')
+  const cardFollowers = document.createElement('p')
+  const cardFollowing = document.createElement('p')
+  const cardBio = document.createElement('p')
+
+  card.classList.add("card")
+  cardImg.src = cardObj.data.avatar_url
+  cardInfo.classList.add("card-info")
+  cardName.classList.add("name")
+  cardUser.classList.add("username")
+  cardAdr.href = cardObj.data.html_url
+
+  card.appendChild(cardImg)
+  card.appendChild(cardInfo)
+  cardInfo.appendChild(cardName)
+  cardInfo.appendChild(cardUser)
+  cardInfo.appendChild(cardLoc)
+  cardInfo.appendChild(cardProf)
+  cardInfo.appendChild(cardFollowers)
+  cardInfo.appendChild(cardFollowing)
+  cardInfo.appendChild(cardBio)
+  cardProf.appendChild(cardAdr)
+
+  cardName.textContent = cardObj.data.name
+  cardUser.textContent = cardObj.data.login
+  cardLoc.textContent = cardObj.data.location
+  
+}
+
 /*
   List of LS Instructors Github username's:
     tetondan
