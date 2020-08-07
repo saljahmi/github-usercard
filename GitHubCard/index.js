@@ -1,17 +1,21 @@
-import axios from 'axios'
+import axios from 'axios';
 console.log(axios)
 /*
   STEP 1: using axios, send a GET request to the following URL
     (replacing the placeholder with your Github name):
     https://api.github.com/users/<your name>
 */
+const cards = document.querySelector('.cards')
 axios.get('https://api.github.com/users/saljahmi')
   .then(response => {
     debugger
     console.log(response)
+    const myCard = cardMaker(response) // step 4
+    cards.appendChild(myCard)
   })
-  .catch(err =>{
+  .catch(errorResponse =>{
     debugger
+    console.log(errorResponse)  
   })
 
 /*
@@ -28,7 +32,6 @@ axios.get('https://api.github.com/users/saljahmi')
 */
 
 
-
 /*
   STEP 5: Now that you have your own card getting added to the DOM, either
     follow this link in your browser https://api.github.com/users/<Your github name>/followers,
@@ -40,7 +43,27 @@ axios.get('https://api.github.com/users/saljahmi')
     user, and adding that card to the DOM.
 */
 
-const followersArray = [];
+const followersArray=[
+  'ericagirges',
+  'pvaidehee',
+  'mphelps1978',
+  'ntilbe',
+  'Cory-Thomas',
+]
+
+// console.log(followersArray)
+followersArray.forEach(follower=>{
+  axios.get(`https://api.github.com/users/${follower}`)
+    .then(response => {
+      debugger
+      const newCard = cardMaker(response)
+      cards.appendChild(newCard)
+    })
+    .catch(error => {
+      debugger
+      console.log(error)
+    })
+  })
 
 /*
   STEP 3: Create a function that accepts a single object as its only argument.
@@ -62,7 +85,8 @@ const followersArray = [];
     </div>
 */
 
-function cardMaker(cardObj){
+function cardMaker(cardObj) {
+  //instantiating element
   const card = document.createElement('div')
   const cardImg = document.createElement('img')
   const cardInfo = document.createElement('div')
@@ -75,6 +99,7 @@ function cardMaker(cardObj){
   const cardFollowing = document.createElement('p')
   const cardBio = document.createElement('p')
 
+  //adding element classnames and attributes
   card.classList.add("card")
   cardImg.src = cardObj.data.avatar_url
   cardInfo.classList.add("card-info")
@@ -82,6 +107,7 @@ function cardMaker(cardObj){
   cardUser.classList.add("username")
   cardAdr.href = cardObj.data.html_url
 
+  //heirarchy
   card.appendChild(cardImg)
   card.appendChild(cardInfo)
   cardInfo.appendChild(cardName)
@@ -91,19 +117,19 @@ function cardMaker(cardObj){
   cardInfo.appendChild(cardFollowers)
   cardInfo.appendChild(cardFollowing)
   cardInfo.appendChild(cardBio)
-  cardProf.appendChild(cardAdr)
+  // cardProf.appendChild(cardAdr): notice you can't put it here, you have to do this after setting up everything for prof(weirdly)
 
+  //adding text content
   cardName.textContent = cardObj.data.name
   cardUser.textContent = cardObj.data.login
-  cardLoc.textContent = cardObj.data.location
-  
-}
+  cardLoc.textContent = `Location: ${cardObj.data.location}`
+  cardProf.textContent= "Profile: "
+  cardProf.appendChild(cardAdr)
+  cardAdr.textContent= `${cardObj.data.html_url}`
+  console.log(cardAdr.textContent)
+  cardFollowers.textContent = `Followers: ${cardObj.data.followers}`
+  cardFollowing.textContent = `Following: ${cardObj.data.following}`
+  cardBio.textContent = `Bio: ${cardObj.data.bio}`
 
-/*
-  List of LS Instructors Github username's:
-    tetondan
-    dustinmyers
-    justsml
-    luishrd
-    bigknell
-*/
+  return card;
+}
